@@ -5,6 +5,7 @@ from tempfile import NamedTemporaryFile
 from typing import List, Optional
 
 from commitizen import cmd
+from commitizen.exceptions import GitCommandError
 
 
 class GitObject:
@@ -96,6 +97,8 @@ def get_commits(
     else:
         command = f"{git_log_cmd} {end}"
     c = cmd.run(command)
+    if c.err:
+        raise GitCommandError(c.err)
     if not c.out:
         return []
 

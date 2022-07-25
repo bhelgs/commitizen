@@ -26,6 +26,7 @@ class ExitCode(enum.IntEnum):
     INVALID_CONFIGURATION = 19
     NOT_ALLOWED = 20
     NO_INCREMENT = 21
+    GIT_COMMAND_ERROR = 22
 
 
 class CommitizenException(Exception):
@@ -148,3 +149,7 @@ class InvalidConfigurationError(CommitizenException):
 
 class NotAllowed(CommitizenException):
     exit_code = ExitCode.NOT_ALLOWED
+
+
+class GitCommandError(CommitizenException):
+    exit_code = ExitCode.GIT_COMMAND_ERROR

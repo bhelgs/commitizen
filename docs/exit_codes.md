@@ -29,3 +29,4 @@ These exit codes can be found in `commitizen/exceptions.py::ExitCode`.
 | InvalidConfigurationError   | 19        | An error was found in the Commitizen Configuration, such as duplicates in `change_type_order`               |
 | NotAllowed                  | 20        | `--incremental` cannot be combined with a `rev_range`                                                       |
 | NoneIncrementExit           | 21        | The commits found are not elegible to be bumped                                                             |
+| GitCommandError             | 22        | Unexpected failure while calling the git command                                                            |
