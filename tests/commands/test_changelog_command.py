@@ -7,6 +7,7 @@ from commitizen import cli, git
 from commitizen.commands.changelog import Changelog
 from commitizen.exceptions import (
     DryRunExit,
+    GitCommandError,
     NoCommitsFoundError,
     NoRevisionError,
     NotAGitProjectError,
@@ -20,10 +21,11 @@ def test_changelog_on_empty_project(mocker):
     testargs = ["cz", "changelog", "--dry-run"]
     mocker.patch.object(sys, "argv", testargs)
 
-    with pytest.raises(NoCommitsFoundError) as excinfo:
+    with pytest.raises(GitCommandError):
         cli.main()
 
-    assert "No commits found" in str(excinfo)
+    #  git will error out with something like:
+    #  "your current branch 'XYZ' does not have any commits yet"
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -652,6 +654,7 @@ def test_changelog_from_rev_latest_version_from_arg(
 def test_changelog_from_rev_single_version_not_found(
     mocker, config_path, changelog_path
 ):
+    """Provides an invalid revision ID to changelog command"""
     with open(config_path, "a") as f:
         f.write('tag_format = "$version"\n')
 
@@ -676,12 +679,13 @@ def test_changelog_from_rev_single_version_not_found(
     with pytest.raises(NoCommitsFoundError) as excinfo:
         cli.main()
 
-    assert "No commits found" in str(excinfo)
+    assert "Could not find a valid revision" in str(excinfo)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_range_version_not_found(mocker, config_path):
+    """Provides an invalid revision ID to changelog command"""
     with open(config_path, "a") as f:
         f.write('tag_format = "$version"\n')
 
@@ -703,7 +707,7 @@ def test_changelog_from_rev_range_version_not_found(mocker, config_path):
     with pytest.raises(NoCommitsFoundError) as excinfo:
         cli.main()
 
-    assert "No commits found" in str(excinfo)
+    assert "Could not find a valid revision" in str(excinfo)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")

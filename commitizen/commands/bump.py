@@ -222,7 +222,7 @@ class Bump:
             raise ExpectedExit()
 
         c = git.commit(message, args=self._get_commit_args())
-        if self.retry and c.return_code != 0 and self.changelog:
+        if self.retry and c.err and self.changelog:
             # Maybe pre-commit reformatted some files? Retry once
             logger.debug("1st git.commit error: %s", c.err)
             logger.info("1st commit attempt failed; retrying once")

@@ -92,6 +92,9 @@ def get_commits(
         f"git -c log.showSignature=False log --pretty={log_format}{delimiter} {args}"
     )
 
+    if end is None:
+        end = "HEAD"
+
     if start:
         command = f"{git_log_cmd} {start}..{end}"
     else:
