@@ -230,6 +230,13 @@ class Bump:
             c = git.commit(message, args=self._get_commit_args())
         if c.return_code != 0:
             raise BumpCommitFailedError(f'2nd git.commit error: "{c.err.strip()}"')
+
+        if c.out:
+            out.write("git commit stdout: " + c.out)
+
+        if c.err:
+            out.write("git commit stderr: " + c.err)
+
         c = git.tag(
             new_tag_version,
             signed=self.bump_settings.get("gpg_sign", False)
